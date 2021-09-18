@@ -3,18 +3,6 @@ import { getAuth } from "firebase/auth";
 
 const routes = [
   {
-    path: "/Login",
-    name: "Login",
-    component: () =>
-      import(/* webpackChunkName: "about" */ "../views/Login.vue"),
-  },
-  {
-    path: "/Register",
-    name: "Register",
-    component: () =>
-      import(/* webpackChunkName: "about" */ "../views/Register.vue"),
-  },
-  {
     path: "/",
     name: "Home",
     component: () =>
@@ -22,6 +10,12 @@ const routes = [
     meta: {
       authRequired: true,
     },
+  },
+  {
+    path: "/Login",
+    name: "Login",
+    component: () =>
+      import(/* webpackChunkName: "about" */ "../views/Login.vue"),
   },
 ];
 
@@ -32,14 +26,16 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   if (to.matched.some((record) => record.meta.authRequired)) {
-    if (getAuth().currentUser) {
-      next();
-    } else {
-      // alert("You must be logged in to see this page");
-      next({
-        path: "/Login",
-      });
-    }
+    getAuth().onAuthStateChanged((user) => {
+      if (user) {
+        next();
+      } else {
+        // alert("You must be logged in to see this page");
+        next({
+          path: "/Login",
+        });
+      }
+    });
   } else {
     next();
   }
