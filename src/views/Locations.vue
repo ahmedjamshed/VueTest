@@ -1,8 +1,8 @@
 <template>
   <div class="locations">
     <h1>{{address.city}}</h1>
-    Latitude: {{ currPos.lat.toFixed(2) }}, Longitude:
-    {{ currPos.lng.toFixed(2) }}
+    Latitude: {{ currPos.lat }}, Longitude:
+    {{ currPos.lng }}
 
   </div>
 </template>

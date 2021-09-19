@@ -35,16 +35,31 @@
 
 import { ref } from "@vue/reactivity";
 import { DatePicker } from 'v-calendar';
+import { getAuth } from "firebase/auth";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { firestore } from "../store";
 
 export default {
     name: "AddTask",
     components: { DatePicker },
-    setup() {
+    setup(props) {
+        console.log(props)
         const summary = ref()
         const description = ref()
         const date = ref()
-        const addTask = () => {
-            console.log(date.value);
+        const addTask = async () => {
+            if (summary.value && date.value && getAuth().currentUser) {
+                await addDoc(collection(firestore, "todos"), {
+                    summary: summary.value,
+                    description: description.value,
+                    date: date.value.toISOString(),
+                    timestamp: serverTimestamp(),
+                    user: getAuth().currentUser.uid
+                });
+            } else {
+                alert("Incomplete Data");
+            }
+
         }
         return { summary, description, date, addTask }
     }

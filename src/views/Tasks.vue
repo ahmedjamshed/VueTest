@@ -15,19 +15,34 @@
 
 <script>
 import { ref } from "@vue/reactivity";
+import { onMounted, onUnmounted } from "@vue/runtime-core";
 import { getAuth } from "firebase/auth";
-import { useRouter } from "vue-router";
+import { collection, query, where, onSnapshot } from "firebase/firestore";
+import { firestore } from "../store";
 import AddTask from "./AddTask.vue"
 
 export default {
     name: "Task",
     components: { AddTask },
     setup() {
-
         const showModal = ref(false)
         const toggleVisibility = () => {
             showModal.value = !showModal.value
         }
+        let unsubscribe;
+        onMounted(() => {
+            const q = query(collection(firestore, "todos"), where("user", "==", getAuth().currentUser.uid));
+            unsubscribe = onSnapshot(q, (querySnapshot) => {
+                const todos = [];
+                querySnapshot.forEach((doc) => {
+                    todos.push(doc.data().summary);
+                });
+                console.log("Current TOdods ", todos.join(", "));
+            });
+        })
+        onUnmounted(() => {
+            unsubscribe()
+        })
         return { showModal, toggleVisibility }
     }
 };

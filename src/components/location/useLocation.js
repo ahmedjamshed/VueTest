@@ -4,7 +4,7 @@ const fetchCity = async ({latitude, longitude}) => {
     try {
         const response = await fetch(`https://us1.locationiq.com/v1/reverse.php?key=${key}&lat=${latitude}&lon=${longitude}&format=json`);
         const data = await response.json();
-        return data.display_name
+        return `${data.address.city ?? 'N/A' }, ${data.address.state ?? 'N/A'}, ${data.address.country ?? 'N/A'}`  
     } catch(e) {
         return "Unknown"
     }
@@ -23,7 +23,8 @@ export default function useLocation() {
   onMounted(() => {
     if (isSupported)
       watcher = navigator.geolocation.watchPosition(
-        position => (coords.value = position.coords)
+        position => (coords.value = { latitude: position.coords.latitude.toFixed(2),
+             longitude: position.coords.longitude.toFixed(2) })
       )
   })
   onUnmounted(() => {

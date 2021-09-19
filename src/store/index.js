@@ -13,31 +13,31 @@ const firebaseConfig = {
 };
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+export const firestore = getFirestore(app);
 
-export default createStore({
+export const store = createStore({
   state: {
     todos: [],
     checkIns: [],
   },
-  mutations: vuexfireMutations,
-  actions: {
-    bindTodosRef: firestoreAction((context) => {
-      // context contains all original properties like commit, state, etc
-      // and adds `bindFirestoreRef` and `unbindFirestoreRef`
-      // we return the promise returned by `bindFirestoreRef` that will
-      // resolve once data is ready
-      return context.bindFirestoreRef("todos", db.collection("todos"));
-    }),
-    bindCheckinsRef: firestoreAction((context) => {
-      return context.bindFirestoreRef("checkIns", db.collection("checkIns"));
-    }),
-    unbindTodos: firestoreAction(({ unbindFirestoreRef }) => {
-      unbindFirestoreRef("todos");
-    }),
-    unbindCheckIns: firestoreAction(({ unbindFirestoreRef }) => {
-      unbindFirestoreRef("checkIns");
-    }),
-  },
+  // mutations: vuexfireMutations,
+  // actions: {
+  //   bindTodosRef: firestoreAction((context) => {
+  //     // context contains all original properties like commit, state, etc
+  //     // and adds `bindFirestoreRef` and `unbindFirestoreRef`
+  //     // we return the promise returned by `bindFirestoreRef` that will
+  //     // resolve once data is ready
+  //     return context.bindFirestoreRef("todos", firestore.collection("todos"));
+  //   }),
+  //   bindCheckinsRef: firestoreAction((context) => {
+  //     return context.bindFirestoreRef("checkIns", firestore.collection("checkIns"));
+  //   }),
+  //   unbindTodos: firestoreAction(({ unbindFirestoreRef }) => {
+  //     unbindFirestoreRef("todos");
+  //   }),
+  //   unbindCheckIns: firestoreAction(({ unbindFirestoreRef }) => {
+  //     unbindFirestoreRef("checkIns");
+  //   }),
+  // },
   modules: {},
 });
