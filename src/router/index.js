@@ -43,7 +43,6 @@ router.beforeEach(async (to, from, next) => {
     getAuth().onAuthStateChanged(() => { res() })
   })
   const user = getAuth().currentUser
-  console.log(user)
   if (to.matched.some((record) => record.meta.authRequired)) {
     if (user) {
       next();

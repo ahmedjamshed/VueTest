@@ -25,8 +25,11 @@ export default {
   display: flex;
   flex: 1;
   align-items: stretch;
+  padding: 30px 0px;
  }
  .rest {
+   display: flex;
    flex: 6;
+   align-items: stretch;
  }
 </style>

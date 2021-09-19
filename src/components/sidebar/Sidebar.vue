@@ -22,7 +22,6 @@ export default {
   flex: 1;
   color: white;
   z-index: 1;
-  padding: 50px 0px;
   flex-direction: column;
 }
 
