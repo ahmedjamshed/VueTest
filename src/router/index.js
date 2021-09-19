@@ -4,16 +4,30 @@ import { getAuth } from "firebase/auth";
 const routes = [
   {
     path: "/",
-    name: "Home",
     component: () =>
       import(/* webpackChunkName: "about" */ "../views/Home.vue"),
+    children: [
+      {
+        path: '',
+        redirect: 'tasks',
+      },
+      {
+        path: 'tasks',
+        component: () =>
+          import(/* webpackChunkName: "about" */ "../views/Tasks.vue"),
+      },
+      {
+        path: 'locations',
+        component: () =>
+          import(/* webpackChunkName: "about" */ "../views/Locations.vue"),
+      },
+    ],
     meta: {
       authRequired: true,
     },
   },
   {
-    path: "/Login",
-    name: "Login",
+    path: "/login",
     component: () =>
       import(/* webpackChunkName: "about" */ "../views/Login.vue"),
   },
@@ -24,21 +38,24 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
+  await new Promise((res) => {
+    getAuth().onAuthStateChanged(() => { res() })
+  })
+  const user = getAuth().currentUser
+  console.log(user)
   if (to.matched.some((record) => record.meta.authRequired)) {
-    getAuth().onAuthStateChanged((user) => {
-      if (user) {
-        next();
-      } else {
-        // alert("You must be logged in to see this page");
-        next({
-          path: "/Login",
-        });
-      }
-    });
+    if (user) {
+      next();
+    } else {
+      // alert("You must be logged in to see this page");
+      next({ path: "/login" });
+    }
   } else {
-    next();
+    if (user && to.path.toLowerCase() === '/login') {
+      next({ path: "/" });
+    }
+    else next();
   }
 });
-
 export default router;

@@ -82,6 +82,7 @@ h2 {
 }
 .modeSwitchText {
   padding: 15px;
+  text-decoration: underline;
 }
 input {
   outline: none;
@@ -91,12 +92,11 @@ input {
   min-width: 0;
 }
 .center {
-  flex: 1;
   display: flex;
+  flex: 1;
   justify-content: center;
   align-items: center;
   text-align: center;
-  height: 100vh;
 }
 
 form {
@@ -107,8 +107,6 @@ form {
 
 @media only screen and (max-width: 768px) {
   form {
-    display: flex;
-    flex-direction: column;
     width: 250px;
   }
 }
@@ -123,6 +121,10 @@ button {
   display: inline-block;
   cursor: pointer;
   font-size: 1em;
+}
+
+button:hover {
+   background-color: #2e2b2b;
 }
 
 a {
