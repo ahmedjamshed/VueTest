@@ -1,8 +1,9 @@
 <template>
   <div class="locations">
-    <h1>Locations</h1>
+    <h1>{{address.city}}</h1>
     Latitude: {{ currPos.lat.toFixed(2) }}, Longitude:
     {{ currPos.lng.toFixed(2) }}
+
   </div>
 </template>
 
@@ -14,12 +15,15 @@ import useLocation from "../components/location/useLocation";
 export default {
   name: "Location",
   setup() {
-    const { coords } = useLocation()
+    const { coords, city } = useLocation()
     const currPos = computed(() => ({
       lat: coords.value.latitude,
       lng: coords.value.longitude
     }))
-    return { currPos }
+    const address = computed(() => ({
+      city: city.value,
+    }))
+    return { currPos, address }
   }
 };
 </script>
