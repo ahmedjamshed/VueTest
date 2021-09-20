@@ -32,7 +32,7 @@ export default function getItems(userID) {
       collection(firestore, "todos"),
       where("user", "==", userID)
     );
-    const checkIns = query(
+    const checkInsRef = query(
       collection(firestore, "checkins"),
       where("user", "==", userID)
     );
@@ -45,7 +45,7 @@ export default function getItems(userID) {
         }
       });
     });
-    unsubCheckins = onSnapshot(checkIns, (querySnapshot) => {
+    unsubCheckins = onSnapshot(checkInsRef, (querySnapshot) => {
       querySnapshot.forEach((doc) => {
         checkIns.value = [...checkIns.value, doc.data()];
       });

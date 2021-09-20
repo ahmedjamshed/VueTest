@@ -12,11 +12,11 @@ const fetchCity = async ({latitude, longitude}) => {
 
 export default function useLocation() {
   const coords = ref({ latitude: 0, longitude: 0 })
-  const city = ref("Unknown")
+  const displayName = ref("Unknown")
   const isSupported = 'navigator' in window && 'geolocation' in navigator
 
   watch(coords, async () => {
-    city.value = await fetchCity(coords.value)
+    displayName.value = await fetchCity(coords.value)
   });
 
   let watcher = null
@@ -30,6 +30,5 @@ export default function useLocation() {
   onUnmounted(() => {
     if (watcher) navigator.geolocation.clearWatch(watcher)
   })
-
-  return { coords, city, isSupported }
+  return { coords, displayName, isSupported }
 }

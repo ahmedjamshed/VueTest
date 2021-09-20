@@ -1,26 +1,25 @@
 <script>import { computed, ref } from "@vue/reactivity"
+import { watch } from "@vue/runtime-core"
 
 export default {
     props: ["item"],
     setup(props) {
-        const item = props.item
-        const date = new Date(item.date)
-        const currMon = date.toLocaleString('default', { month: 'short' });
-
-        const formattedDate = `${date.getDate()} ${currMon}, ${date.getHours()}:${date.getMinutes()}`
-        return { item, formattedDate }
+        const item = computed(() => ({ 
+            name: props.item.displayName,
+            point: `${props.item.pinPoint.latitude} °N , ${props.item.pinPoint.longitude} °E`
+        }))
+        return { item }
     }
 }
 </script>
 
 <template>
-    <div class="taskItem">
-        <input type="checkbox" />
+    <div class="locationItem">
+        <img src="@/assets/loc.svg" />
         <div class="itemDetail">
-            <p class="heading">{{ item.summary }}</p>
+            <p class="heading">{{ item.name }}</p>
             <div class="dateContainer">
-                <img src="@/assets/timer.svg" />
-                <p class="desc">{{ formattedDate }}</p>
+                <p class="desc">{{ item.point }}</p>
             </div>
         </div>
     </div>
@@ -28,7 +27,7 @@ export default {
 
 
 <style scoped>
-.taskItem {
+.locationItem {
     display: flex;
     flex: 1;
     color: white;
@@ -36,9 +35,9 @@ export default {
     align-items: flex-start;
 }
 img {
-    height: 0.7em;
-    width: 0.7em;
-    padding: 0px 5px 0px 0px;
+    height: 1.1em;
+    width: 1.1em;
+    padding: 8px 8px 0px 0px;
 }
 
 input {
