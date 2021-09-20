@@ -1,7 +1,12 @@
-import { createStore } from "vuex";
-import { vuexfireMutations, firestoreAction } from "vuexfire";
 import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
+import {
+  getFirestore,
+  query,
+  onSnapshot,
+  collection,
+  where,
+} from "firebase/firestore";
+import { onUnmounted, onMounted, ref } from "vue";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAndetDZmIkxsmIFacnm5cK_vHFU9UUfws",
@@ -15,29 +20,40 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 export const firestore = getFirestore(app);
 
-export const store = createStore({
-  state: {
-    todos: [],
-    checkIns: [],
-  },
-  // mutations: vuexfireMutations,
-  // actions: {
-  //   bindTodosRef: firestoreAction((context) => {
-  //     // context contains all original properties like commit, state, etc
-  //     // and adds `bindFirestoreRef` and `unbindFirestoreRef`
-  //     // we return the promise returned by `bindFirestoreRef` that will
-  //     // resolve once data is ready
-  //     return context.bindFirestoreRef("todos", firestore.collection("todos"));
-  //   }),
-  //   bindCheckinsRef: firestoreAction((context) => {
-  //     return context.bindFirestoreRef("checkIns", firestore.collection("checkIns"));
-  //   }),
-  //   unbindTodos: firestoreAction(({ unbindFirestoreRef }) => {
-  //     unbindFirestoreRef("todos");
-  //   }),
-  //   unbindCheckIns: firestoreAction(({ unbindFirestoreRef }) => {
-  //     unbindFirestoreRef("checkIns");
-  //   }),
-  // },
-  modules: {},
-});
+export default function getItems(userID) {
+  const completedTasks = ref([]);
+  const incompleteTasks = ref([]);
+  const checkIns = ref([]);
+
+  let unsubTodos;
+  let unsubCheckins;
+  onMounted(() => {
+    const todosRef = query(
+      collection(firestore, "todos"),
+      where("user", "==", userID)
+    );
+    const checkIns = query(
+      collection(firestore, "checkins"),
+      where("user", "==", userID)
+    );
+    unsubTodos = onSnapshot(todosRef, (querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        if (doc.data().completed) {
+          completedTasks.value = [...completedTasks.value, doc.data()];
+        } else {
+          incompleteTasks.value = [...incompleteTasks.value, doc.data()];
+        }
+      });
+    });
+    unsubCheckins = onSnapshot(checkIns, (querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        checkIns.value = [...checkIns.value, doc.data()];
+      });
+    });
+  });
+  onUnmounted(() => {
+    unsubTodos();
+    unsubCheckins();
+  });
+  return { completedTasks, incompleteTasks, checkIns };
+}

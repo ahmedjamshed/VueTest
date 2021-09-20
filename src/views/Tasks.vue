@@ -1,8 +1,17 @@
 <template>
     <div class="tasks">
         <a @click="toggleVisibility" class="addLink">+ Add new task</a>
-        <a class="heading">Incomplete</a>
-        <a class="heading">Completed</a>
+        <div class="container">
+            <div class="halfContainer">
+                <a class="heading">Incomplete</a>
+                <span v-for="task in incompleteTasks">
+                    <TaskItem :item="{ ...task }"></TaskItem>
+                </span>
+            </div>
+            <div class="halfContainer">
+                <a class="heading">Completed</a>
+            </div>
+        </div>
         <transition name="modal">
             <AddTask v-if="showModal" @close="toggleVisibility">
                 <template v-slot:header>
@@ -14,36 +23,23 @@
 </template>
 
 <script>
-import { ref } from "@vue/reactivity";
-import { onMounted, onUnmounted } from "@vue/runtime-core";
-import { getAuth } from "firebase/auth";
-import { collection, query, where, onSnapshot } from "firebase/firestore";
-import { firestore } from "../store";
+
 import AddTask from "./AddTask.vue"
+import TaskItem from "@/components/items/taskItem.vue"
+import { getAuth } from "firebase/auth";
+import getItems from "../store";
+import { ref } from "@vue/reactivity";
 
 export default {
     name: "Task",
-    components: { AddTask },
-    setup() {
+    components: { AddTask, TaskItem },
+    setup(props) {
         const showModal = ref(false)
         const toggleVisibility = () => {
             showModal.value = !showModal.value
         }
-        let unsubscribe;
-        onMounted(() => {
-            const q = query(collection(firestore, "todos"), where("user", "==", getAuth().currentUser.uid));
-            unsubscribe = onSnapshot(q, (querySnapshot) => {
-                const todos = [];
-                querySnapshot.forEach((doc) => {
-                    todos.push(doc.data().summary);
-                });
-                console.log("Current TOdods ", todos.join(", "));
-            });
-        })
-        onUnmounted(() => {
-            unsubscribe()
-        })
-        return { showModal, toggleVisibility }
+        const { completedTasks, incompleteTasks, checkIns } = getItems(getAuth().currentUser.uid)
+        return { completedTasks, incompleteTasks, checkIns, showModal, toggleVisibility }
     }
 };
 </script>
@@ -63,5 +59,17 @@ export default {
 .heading {
     margin: 20px 0px;
     font-weight: 600;
+}
+.container {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-items: stretch;
+}
+.halfContainer {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-items: stretch;
 }
 </style>

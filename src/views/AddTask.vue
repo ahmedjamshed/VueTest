@@ -51,9 +51,9 @@ export default {
             if (summary.value && date.value && getAuth().currentUser) {
                 await addDoc(collection(firestore, "todos"), {
                     summary: summary.value,
-                    description: description.value,
+                    description: description.value ?? "",
                     date: date.value.toISOString(),
-                    timestamp: serverTimestamp(),
+                    timestamp: new Date().toISOString(),
                     user: getAuth().currentUser.uid
                 });
             } else {
