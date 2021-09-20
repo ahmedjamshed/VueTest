@@ -33,11 +33,12 @@
 <script>
 // @ is an alias to /src
 
-import { ref } from "@vue/reactivity";
+import { computed, ref } from "@vue/reactivity";
 import { DatePicker } from 'v-calendar';
 import { getAuth } from "firebase/auth";
 import { collection, addDoc } from "firebase/firestore";
 import { firestore } from "../store";
+import { onMounted, watch, watchEffect } from "@vue/runtime-core";
 
 export default {
     name: "AddTask",
@@ -46,6 +47,9 @@ export default {
         const summary = ref()
         const description = ref()
         const date = ref()
+        watchEffect(() => {
+            console.log('modal', props)
+        })
         const addTask = async () => {
             if (summary.value && date.value && getAuth().currentUser) {
                 await addDoc(collection(firestore, "todos"), {

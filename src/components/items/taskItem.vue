@@ -35,7 +35,7 @@ export default {
             <img class="checkImg" v-if="item.completed" src="@/assets/checked.svg" />
             <img class="checkImg" v-else src="@/assets/unchecked.svg" />
         </div>
-        <div class="itemDetail">
+        <div class="itemDetail" @click="$emit('edit', item)">
             <p :class="item.completed ? 'headingDisabled' : 'heading'">{{ item.summary }}</p>
             <div v-if="!item.completed" class="dateContainer">
                 <span class="timerImg">⏰</span>
@@ -53,6 +53,7 @@ export default {
     color: white;
     flex-direction: row;
     align-items: flex-start;
+    cursor: pointer;
 }
 .checkImg {
     height: 1em;

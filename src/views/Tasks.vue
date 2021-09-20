@@ -1,12 +1,12 @@
 <template>
     <div class="tasks">
-        <a @click="toggleVisibility" class="addLink">+ Add new task</a>
+        <a @click="() => toggleVisibility(undefined)" class="addLink">+ Add new task</a>
         <div class="container">
             <div class="halfContainer">
                 <a class="heading">Incomplete</a>
                 <ul class="listHolder">
                     <li v-for="task in incompleteTasks" :key="task.id">
-                        <TaskItem :item="{ ...task }"></TaskItem>
+                        <TaskItem :item="{ ...task }" @edit="toggleVisibility"></TaskItem>
                     </li>
                 </ul>
             </div>
@@ -20,9 +20,9 @@
             </div>
         </div>
         <transition name="modal">
-            <AddTask v-if="showModal" @close="toggleVisibility">
+            <AddTask v-if="showModal" @close="toggleVisibility" :item="editItem">
                 <template v-slot:header>
-                    <h3>New Task</h3>
+                    <h3>{{modalHead}}</h3>
                 </template>
             </AddTask>
         </transition>
@@ -42,11 +42,19 @@ export default {
     components: { AddTask, TaskItem },
     setup(props) {
         const showModal = ref(false)
-        const toggleVisibility = () => {
+        const modalHead = ref('New Task')
+        const editItem = ref()
+        const toggleVisibility = (item) => {
+            if(item) {
+                editItem.value = item
+                modalHead.value = 'Edit Task'
+            } else {
+                modalHead.value = 'Add Task'
+            }
             showModal.value = !showModal.value
         }
         const { completedTasks, incompleteTasks } = getItems(getAuth().currentUser.uid)
-        return { completedTasks, incompleteTasks, showModal, toggleVisibility }
+        return { modalHead, completedTasks, incompleteTasks, showModal, editItem, toggleVisibility }
     }
 };
 </script>
