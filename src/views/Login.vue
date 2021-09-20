@@ -112,7 +112,7 @@ form {
 }
 
 button {
-  background-color: black;
+  background-color: var(--primaryColor);
   border: none;
   border-radius: 25px;
   color: white;

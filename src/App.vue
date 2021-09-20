@@ -14,6 +14,12 @@
   padding: 0;
   margin: 0;
 }
+
+:root {
+  --primaryColor: black;
+  --white: #ffffff; 
+}
+
 #app {
   display: flex;
   width: 100vw;

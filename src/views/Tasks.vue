@@ -4,20 +4,19 @@
         <div class="container">
             <div class="halfContainer">
                 <a class="heading">Incomplete</a>
-                <div class="listHolder">
-                    <span v-for="task in incompleteTasks">
-                    <TaskItem :item="{ ...task }"></TaskItem>
-                </span>
-                </div>
-                
+                <ul class="listHolder">
+                    <li v-for="task in incompleteTasks" :key="task.id">
+                        <TaskItem :item="{ ...task }"></TaskItem>
+                    </li>
+                </ul>
             </div>
             <div class="halfContainer">
                 <a class="heading">Completed</a>
-                <div class="listHolder">
-                    <span v-for="task in incompleteTasks">
-                    <TaskItem :item="{ ...task }"></TaskItem>
-                </span>
-                </div>
+                <ul class="listHolder">
+                    <li v-for="task in completedTasks"  :key="task.id">
+                        <TaskItem :item="{ ...task }"></TaskItem>
+                    </li>
+                </ul>
             </div>
         </div>
         <transition name="modal">
@@ -57,7 +56,7 @@ export default {
     display: flex;
     flex: 1;
     flex-direction: column;
-    padding: 30px 60px;
+    padding: 30px 0px 5px 60px;
     align-items: stretch;
 }
 .addLink {
@@ -80,7 +79,7 @@ export default {
     overflow: hidden;
 }
 .halfContainer {
-    height: 45%;
+    height: 47%;
     flex-direction: column;
     align-items: stretch;
     padding: 15px 0px;
@@ -97,19 +96,18 @@ export default {
     scrollbar-width: none;  */
 }
 
-.listHolder::-webkit-scrollbar-track{
-  background:transparent;
+.listHolder::-webkit-scrollbar-track {
+    background: transparent;
 }
 .listHolder::-webkit-scrollbar {
-  width: 0.3em;
-  background: white;
+    width: 0.5em;
+    background: white;
 }
 .listHolder::-webkit-scrollbar-thumb {
-  background: rgb(211, 211, 211);
+    background: rgb(211, 211, 211);
 }
 
-.listHolder::-webkit-scrollbar-track-piece
-{
-   display:none;
+.listHolder::-webkit-scrollbar-track-piece {
+    display: none;
 }
 </style>

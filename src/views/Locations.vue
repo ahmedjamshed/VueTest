@@ -1,44 +1,3 @@
-<!-- <template>
-  <div class="locations">
-    <h1>{{address.city}}</h1>
-    Latitude: {{ currPos.lat }}, Longitude:
-    {{ currPos.lng }}
-
-  </div>
-</template>
-
-<script>
-import { computed } from "@vue/reactivity";
-import useLocation from "../components/location/useLocation";
-import TaskItem from "@/components/items/taskItem.vue"
-import { getAuth } from "firebase/auth";
-import getItems from "../store";
-import { ref } from "@vue/reactivity";
-
-export default {
-  name: "Location",
-  setup() {
-    const { coords, city } = useLocation()
-    const currPos = computed(() => ({
-      lat: coords.value.latitude,
-      lng: coords.value.longitude
-    }))
-    const address = computed(() => ({
-      city: city.value,
-    }))
-    return { currPos, address }
-  }
-};
-</script>
-
-<style scoped>
-.locations {
-  display: flex;
-  flex: 1;
-  align-items: stretch;
-}
-</style> -->
-
 <script>
 
 import LocationItem from "@/components/items/locationItem.vue"
@@ -54,7 +13,6 @@ export default {
   components: { LocationItem },
   setup(props) {
     const { coords, displayName } = useLocation()
-    console.log(coords.value, displayName.value)
     const address = computed(() => ({
       displayName: displayName.value,
       pinPoint: coords.value
@@ -82,17 +40,17 @@ export default {
   <div class="locations">
     <a @click="addCheckin" class="addLink">+ Check In</a>
     <div class="container">
-      <div class="halfContainer">
+      <div class="topContainer">
         <a class="heading">Current Location</a>
         <LocationItem :item="address"></LocationItem>
       </div>
-      <div class="halfContainer">
+      <div class="bottomContainer">
         <a class="heading">Previous Locations</a>
-        <div class="listHolder">
-          <span v-for="checkIn in checkIns">
+        <ul class="listHolder">
+          <li v-for="checkIn in checkIns" :key="checkIn.id">
             <LocationItem :item="checkIn"></LocationItem>
-          </span>
-        </div>
+          </li>
+        </ul>
       </div>
     </div>
   </div>
@@ -104,7 +62,7 @@ export default {
   display: flex;
   flex: 1;
   flex-direction: column;
-  padding: 30px 60px;
+  padding: 30px 0px 5px 60px;
   align-items: stretch;
 }
 .addLink {
@@ -126,8 +84,12 @@ export default {
   align-items: stretch;
   overflow: hidden;
 }
-.halfContainer {
-  height: 45%;
+
+.topContainer {
+  padding: 15px 0px 0px;
+}
+.bottomContainer {
+  height: 75%;
   flex-direction: column;
   align-items: stretch;
   padding: 15px 0px;
@@ -148,7 +110,7 @@ export default {
   background: transparent;
 }
 .listHolder::-webkit-scrollbar {
-  width: 0.3em;
+  width: 0.5em;
   background: white;
 }
 .listHolder::-webkit-scrollbar-thumb {

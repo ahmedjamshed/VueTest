@@ -51,11 +51,11 @@ export default {
   text-decoration: none;
 }
 .link:hover {
-  background-color: black;
+  background-color: var(--primaryColor);
   color: white;
 }
 .link.active {
-  background-color: black;
+  background-color: var(--primaryColor);
   color: white;
 }
 .link .icon {

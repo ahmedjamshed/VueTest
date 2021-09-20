@@ -36,14 +36,13 @@
 import { ref } from "@vue/reactivity";
 import { DatePicker } from 'v-calendar';
 import { getAuth } from "firebase/auth";
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { collection, addDoc } from "firebase/firestore";
 import { firestore } from "../store";
 
 export default {
     name: "AddTask",
     components: { DatePicker },
     setup(props) {
-        console.log(props)
         const summary = ref()
         const description = ref()
         const date = ref()
@@ -53,6 +52,7 @@ export default {
                     summary: summary.value,
                     description: description.value ?? "",
                     date: date.value.toISOString(),
+                    completed: false,
                     timestamp: new Date().toISOString(),
                     user: getAuth().currentUser.uid
                 });
@@ -116,7 +116,7 @@ img {
 }
 
 button {
-    background-color: black;
+    background-color: var(--primaryColor);
     border: none;
     border-radius: 25px;
     color: white;
@@ -163,12 +163,12 @@ textarea {
     padding: 0px 10px;
     font-size: 0.9em;
     min-width: 0;
+    font-family: Arial, sans-serif;
     border: none;
     resize: none;
 }
 textarea::placeholder {
     color: #969696;
-    font-family: Arial, sans-serif;
     font-size: 1em;
 }
 

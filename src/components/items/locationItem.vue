@@ -15,7 +15,7 @@ export default {
 
 <template>
     <div class="locationItem">
-        <img src="@/assets/loc.svg" />
+        <span>📍</span>
         <div class="itemDetail">
             <p class="heading">{{ item.name }}</p>
             <div class="dateContainer">
@@ -34,10 +34,10 @@ export default {
     flex-direction: row;
     align-items: flex-start;
 }
-img {
+span {
     height: 1.1em;
     width: 1.1em;
-    padding: 8px 8px 0px 0px;
+    padding: 2px 8px 0px 0px;
 }
 
 input {
