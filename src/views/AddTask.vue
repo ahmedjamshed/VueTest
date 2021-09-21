@@ -36,30 +36,40 @@
 import { computed, ref } from "@vue/reactivity";
 import { DatePicker } from 'v-calendar';
 import { getAuth } from "firebase/auth";
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, updateDoc, doc } from "firebase/firestore";
 import { firestore } from "../store";
-import { onMounted, watch, watchEffect } from "@vue/runtime-core";
+import { onMounted, onUnmounted, watch, watchEffect } from "@vue/runtime-core";
 
 export default {
     name: "AddTask",
     components: { DatePicker },
+    props: ['item'],
     setup(props) {
-        const summary = ref()
-        const description = ref()
-        const date = ref()
-        watchEffect(() => {
-            console.log('modal', props)
-        })
+        const item = props.item
+        const dateObj = item.date ? new Date(item.date) : undefined
+        const summary = ref(item.summary || '')
+        const description = ref(item.description || '')
+        const date = ref(dateObj)
+
+
         const addTask = async () => {
             if (summary.value && date.value && getAuth().currentUser) {
-                await addDoc(collection(firestore, "todos"), {
+                let taskObj = {
                     summary: summary.value,
-                    description: description.value ?? "",
+                    description: description.value ?? '',
                     date: date.value.toISOString(),
-                    completed: false,
-                    timestamp: new Date().toISOString(),
-                    user: getAuth().currentUser.uid
-                });
+                }
+                if (item.id) {
+                    await updateDoc(doc(firestore, "todos", item.id), taskObj);
+                } else {
+                    taskObj = {
+                        ...taskObj, completed: false,
+                        timestamp: new Date().toISOString(),
+                        user: getAuth().currentUser.uid
+                    }
+                    await addDoc(collection(firestore, "todos"), taskObj);
+                }
+
             } else {
                 alert("Incomplete Data");
             }

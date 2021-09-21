@@ -13,7 +13,7 @@
             <div class="halfContainer">
                 <a class="heading">Completed</a>
                 <ul class="listHolder">
-                    <li v-for="task in completedTasks"  :key="task.id">
+                    <li v-for="task in completedTasks" :key="task.id">
                         <TaskItem :item="{ ...task }"></TaskItem>
                     </li>
                 </ul>
@@ -22,7 +22,7 @@
         <transition name="modal">
             <AddTask v-if="showModal" @close="toggleVisibility" :item="editItem">
                 <template v-slot:header>
-                    <h3>{{modalHead}}</h3>
+                    <h3>{{ modalHead }}</h3>
                 </template>
             </AddTask>
         </transition>
@@ -45,10 +45,11 @@ export default {
         const modalHead = ref('New Task')
         const editItem = ref()
         const toggleVisibility = (item) => {
-            if(item) {
+            if (item) {
                 editItem.value = item
                 modalHead.value = 'Edit Task'
             } else {
+                editItem.value = {}
                 modalHead.value = 'Add Task'
             }
             showModal.value = !showModal.value
@@ -64,12 +65,13 @@ export default {
     display: flex;
     flex: 1;
     flex-direction: column;
-    padding: 30px 0px 5px 60px;
+    padding: 30px 5px 5px 5%;
     align-items: stretch;
 }
 .addLink {
     font-weight: 600;
     cursor: pointer;
+    user-select: none;
 }
 .heading {
     margin: 10px 0px;
@@ -77,6 +79,7 @@ export default {
     flex: 1;
     display: flex;
     align-self: flex-start;
+    user-select: none;
 }
 .container {
     height: 84vh;

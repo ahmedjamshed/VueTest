@@ -4,17 +4,21 @@ import { watch } from "@vue/runtime-core"
 export default {
     props: ["item"],
     setup(props) {
-        const item = computed(() => ({ 
+        const item = computed(() => ({
             name: props.item.displayName,
             point: `${props.item.pinPoint.latitude} °N , ${props.item.pinPoint.longitude} °E`
         }))
-        return { item }
+        const openMap = () => {
+            const link = `http://maps.google.com/maps?q=loc:${props.item.pinPoint.latitude},${props.item.pinPoint.longitude}`
+            window.open(link)
+        }
+        return { item, openMap }
     }
 }
 </script>
 
 <template>
-    <div class="locationItem">
+    <div class="locationItem" @click="openMap">
         <span>📍</span>
         <div class="itemDetail">
             <p class="heading">{{ item.name }}</p>
@@ -33,11 +37,12 @@ export default {
     color: white;
     flex-direction: row;
     align-items: flex-start;
+    user-select: none;
 }
 span {
     height: 1.1em;
     width: 1.1em;
-    padding: 2px 8px 0px 0px;
+    margin: 7px 8px 0px 0px;
 }
 
 input {

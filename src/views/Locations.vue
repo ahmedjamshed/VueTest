@@ -19,7 +19,7 @@ export default {
     }))
     const { checkIns } = getItems(getAuth().currentUser.uid)
     const addCheckin = async () => {
-      if (address && address.displayName !== "Unknown"  && getAuth().currentUser) {
+      if (address && address.displayName !== "Unknown" && getAuth().currentUser) {
         await addDoc(collection(firestore, "checkins"), {
           displayName: displayName.value,
           pinPoint: new GeoPoint(coords.value.latitude, coords.value.longitude),
@@ -29,7 +29,6 @@ export default {
       } else {
         alert("Incomplete Data");
       }
-
     }
     return { address, checkIns, addCheckin }
   }
@@ -62,12 +61,13 @@ export default {
   display: flex;
   flex: 1;
   flex-direction: column;
-  padding: 30px 0px 5px 60px;
+  padding: 30px 5px 5px 5%;
   align-items: stretch;
 }
 .addLink {
   font-weight: 600;
   cursor: pointer;
+  user-select: none;
 }
 .heading {
   margin: 10px 0px;
@@ -75,6 +75,7 @@ export default {
   flex: 1;
   display: flex;
   align-self: flex-start;
+  user-select: none;
 }
 .container {
   height: 84vh;

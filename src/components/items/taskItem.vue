@@ -1,6 +1,6 @@
 <script>
 import { computed } from "@vue/reactivity";
-import { doc, updateDoc } from "firebase/firestore";
+import { doc, updateDoc, deleteDoc } from "firebase/firestore";
 import { firestore } from "../../store";
 
 export default {
@@ -16,22 +16,23 @@ export default {
             }
         })
 
-
-        const toggleItem = async (item) => {
+        const updateItem = async (item) => {
             await updateDoc(doc(firestore, "todos", item.id), {
                 completed: !item.completed
             });
         }
 
-
-        return { item, toggleItem }
+        const deleteItem = async (item) => {
+            await deleteDoc(doc(firestore, "todos", item.id));
+        }
+        return { item, updateItem, deleteItem }
     }
 }
 </script>
 
 <template>
     <div class="taskItem">
-        <div @click="toggleItem(item)">
+        <div @click="updateItem(item)">
             <img class="checkImg" v-if="item.completed" src="@/assets/checked.svg" />
             <img class="checkImg" v-else src="@/assets/unchecked.svg" />
         </div>
@@ -39,9 +40,10 @@ export default {
             <p :class="item.completed ? 'headingDisabled' : 'heading'">{{ item.summary }}</p>
             <div v-if="!item.completed" class="dateContainer">
                 <span class="timerImg">⏰</span>
-                <p class="desc">{{item.formattedDate }}</p>
+                <p class="desc">{{ item.formattedDate }}</p>
             </div>
         </div>
+        <img class="checkImg" src="@/assets/delete.svg" @click="deleteItem(item)" />
     </div>
 </template>
 
@@ -54,6 +56,7 @@ export default {
     flex-direction: row;
     align-items: flex-start;
     cursor: pointer;
+    user-select: none;
 }
 .checkImg {
     height: 1em;
