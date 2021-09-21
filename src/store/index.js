@@ -38,6 +38,8 @@ const resetState = () => {
 };
 
 export const getItems = (userID) => {
+  // temporary store to get the things done.
+  // I know there is so much to change here but leaving as it is because things are working atleast.
   watch(allTasks, () => {
     const completed = [];
     const incompleted = [];
