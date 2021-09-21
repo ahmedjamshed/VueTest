@@ -34,7 +34,7 @@
 import AddTask from "./AddTask.vue"
 import TaskItem from "@/components/items/taskItem.vue"
 import { getAuth } from "firebase/auth";
-import getItems from "../store";
+import { getItems } from "../store";
 import { ref } from "@vue/reactivity";
 
 export default {

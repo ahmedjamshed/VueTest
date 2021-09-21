@@ -6,7 +6,6 @@ const fetchCity = async ({ latitude, longitude }) => {
       `https://us1.locationiq.com/v1/reverse.php?key=${key}&lat=${latitude}&lon=${longitude}&format=json`
     );
     const data = await response.json();
-    console.log(data);
     return data.display_name; //`${data.address.city ?? 'N/A' }, ${data.address.state ?? 'N/A'}, ${data.address.country ?? 'N/A'}`
   } catch (e) {
     return "Unknown";

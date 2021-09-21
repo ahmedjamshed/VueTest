@@ -4,7 +4,7 @@ import LocationItem from "@/components/items/locationItem.vue"
 import { getAuth } from "firebase/auth";
 import { collection, addDoc, GeoPoint } from "firebase/firestore";
 import { firestore } from "../store";
-import getItems from "../store";
+import { getItems } from "../store";
 import useLocation from "../components/location/useLocation";
 import { computed } from "@vue/reactivity";
 

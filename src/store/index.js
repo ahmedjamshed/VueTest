@@ -6,6 +6,7 @@ import {
   collection,
   where,
 } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
 import { onUnmounted, onMounted, ref, watch } from "vue";
 
 const firebaseConfig = {
@@ -20,35 +21,50 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 export const firestore = getFirestore(app);
 
-export default function getItems(userID) {
-  const completedTasks = ref([]);
-  const incompleteTasks = ref([]);
-  const checkIns = ref([]);
+const completedTasks = ref([]);
+const incompleteTasks = ref([]);
+const checkIns = ref([]);
 
-  const allTasks = ref({})
-  const allCheckIns = ref({})
+const allTasks = ref({});
+const allCheckIns = ref({});
 
+const resetState = () => {
+  completedTasks.value = [];
+  incompleteTasks.value = [];
+  checkIns.value = [];
+
+  allTasks.value = {};
+  allCheckIns.value = {};
+};
+
+export const getItems = (userID) => {
   watch(allTasks, () => {
     const completed = [];
     const incompleted = [];
     for (const prop in allTasks.value) {
-      if(allTasks.value[prop].completed) {
-        completed.push(allTasks.value[prop])
+      if (allTasks.value[prop].completed) {
+        completed.push(allTasks.value[prop]);
       } else {
-        incompleted.push(allTasks.value[prop])
+        incompleted.push(allTasks.value[prop]);
       }
     }
-    completedTasks.value = completed.sort((a, b) => a.date.localeCompare(b.date))
-    incompleteTasks.value = incompleted.sort((a, b) => a.date.localeCompare(b.date))
-  })
+    completedTasks.value = completed.sort((a, b) =>
+      a.date.localeCompare(b.date)
+    );
+    incompleteTasks.value = incompleted.sort((a, b) =>
+      a.date.localeCompare(b.date)
+    );
+  });
 
   watch(allCheckIns, () => {
     const checks = [];
     for (const prop in allCheckIns.value) {
-      checks.push(allCheckIns.value[prop])
+      checks.push(allCheckIns.value[prop]);
     }
-    checkIns.value = checks.sort((a, b) => -a.timestamp.localeCompare(b.timestamp))
-  })
+    checkIns.value = checks.sort(
+      (a, b) => -a.timestamp.localeCompare(b.timestamp)
+    );
+  });
 
   let unsubTodos;
   let unsubCheckins;
@@ -65,25 +81,28 @@ export default function getItems(userID) {
     );
 
     unsubTodos = onSnapshot(todosRef, (querySnapshot) => {
-      const docs = {}
+      const docs = {};
       querySnapshot.forEach((doc) => {
-        docs[doc.id] = {id: doc.id, ...doc.data()};
+        docs[doc.id] = { id: doc.id, ...doc.data() };
       });
-      allTasks.value = docs
+      allTasks.value = docs;
     });
 
     unsubCheckins = onSnapshot(checkInsRef, (querySnapshot) => {
-      const docs = {}
+      const docs = {};
       querySnapshot.forEach((doc) => {
-        docs[doc.id] = {id: doc.id, ...doc.data()};
+        docs[doc.id] = { id: doc.id, ...doc.data() };
       });
-      allCheckIns.value = docs
+      allCheckIns.value = docs;
     });
   });
 
   onUnmounted(() => {
+    if (!getAuth().currentUser) {
+      resetState();
+    }
     unsubTodos();
     unsubCheckins();
   });
   return { completedTasks, incompleteTasks, checkIns };
-}
+};
