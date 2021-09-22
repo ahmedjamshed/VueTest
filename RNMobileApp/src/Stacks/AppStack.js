@@ -8,6 +8,7 @@ import TopTabStack from "../Stacks/TopTabStack";
 import auth from "@react-native-firebase/auth";
 import { fetchandTrackToDoItems } from "../store/todo/todoListener";
 import { useDispatch } from "react-redux";
+import { fetchandTrackCheckinItems } from "../store/checkin/checkinListener";
 
 const Stack = createNativeStackNavigator();
 
@@ -17,16 +18,19 @@ export default function AppStack() {
   const dispatch = useDispatch();
   useEffect(() => {
     let todoListener;
+    let checkinListener;
     const subscriber = auth().onAuthStateChanged((user) => {
       if (user) {
         setUser(user);
         todoListener = fetchandTrackToDoItems(dispatch);
+        checkinListener = fetchandTrackCheckinItems(dispatch);
         setLoading(false);
       }
     });
     return () => {
       subscriber();
       todoListener?.();
+      checkinListener?.()
     };
   }, []);
 

@@ -1,12 +1,10 @@
 import React from "react";
-import { View, Text, TouchableOpacity } from "react-native";
+import { Text } from "react-native";
+import { useSelector } from "react-redux";
+
 export default function LocationScreen() {
-  return (
-    <View style={{ marginTop: 100 }}>
-      <Text>Location Screen</Text>
-      <TouchableOpacity onPress={() => {}}>
-        <Text>logout</Text>
-      </TouchableOpacity>
-    </View>
-  );
+  const checkins = useSelector((state) => state.checkinSlice);
+  console.log(checkins);
+  return <Text style={{ marginTop: 100 }}>{JSON.stringify(checkins)}</Text>;
 }
+
