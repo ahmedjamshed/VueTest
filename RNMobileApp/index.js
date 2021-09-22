@@ -1,18 +1,11 @@
 /**
  * @format
  */
-import React from 'react';
+import React from "react";
+import { AppRegistry } from "react-native";
+import App from "./App";
+import { name as appName } from "./app.json";
 
-import {AppRegistry} from 'react-native';
-import App from './App';
-import {name as appName} from './app.json';
-import {store} from './src/Component/Store';
-import {Provider} from 'react-redux';
-
-const Root = () => (
-  <Provider store={store}>
-    <App />
-  </Provider>
-);
+const Root = () => <App />;
 
 AppRegistry.registerComponent(appName, () => Root);
