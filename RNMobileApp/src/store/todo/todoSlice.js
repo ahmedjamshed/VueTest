@@ -24,7 +24,7 @@ export const upsertTodo = createAsyncThunk("store/upsertTodo", async (item) => {
 const todos = createEntityAdapter();
 
 const todoSlice = createSlice({
-  name: "store",
+  name: "todoSlice",
   initialState: todos.getInitialState(),
   reducers: {
     upsertTodoLocal: todos.upsertOne,
@@ -41,3 +41,5 @@ const todoSlice = createSlice({
 });
 export const { addAllTodos, upsertTodoLocal, deleteTodo } = todoSlice.actions;
 export default todoSlice.reducer;
+
+export const todosSelectors = todos.getSelectors((state) => state.todoSlice);
