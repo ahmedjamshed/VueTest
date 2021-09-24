@@ -1,13 +1,12 @@
 import React, { useCallback } from "react";
-import auth from "@react-native-firebase/auth";
+
 import { Pressable, SectionList } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { Heading } from "../Component/Heading";
 import { TodoItem } from "../Component/TodoItem";
-import { todosSelectors, upsertTodo } from "../store/todo/todoSlice";
+import { todosSelectors } from "../store/todo/todoSlice";
 
-export default function TaskScreen() {
-  const dispatch = useDispatch();
+export default function TaskScreen({ navigation }) {
   const tasks = useSelector(todosSelectors.selectAll);
   const inCompletedTasks = tasks.filter(
     (item) => (console.log(item), !item.completed)
@@ -15,17 +14,15 @@ export default function TaskScreen() {
   const completedTasks = tasks.filter((item) => item.completed);
   const data = [
     {
-      title: "Incomplete Tasks",
+      title: "Incomplete",
       data: inCompletedTasks,
     },
     {
-      title: "Completed Tasks",
+      title: "Completed",
       data: completedTasks,
     },
   ];
-  const addItem = useCallback((item) => {
-    dispatch(upsertTodo(item));
-  }, []);
+
   const renderItem = useCallback(
     ({ item }) => <TodoItem id={item.id}></TodoItem>,
     []
@@ -38,14 +35,7 @@ export default function TaskScreen() {
     () => (
       <Pressable
         onPress={() => {
-          addItem({
-            summary: "Add through",
-            description: "desc",
-            date: new Date().toISOString(),
-            completed: false, // remove in case of edit
-            timestamp: new Date().toISOString(), // remove in case of edit
-            user: auth().currentUser.uid, // remove in case of edit
-          });
+          navigation.navigate("Modal");
         }}
       >
         <Heading text={"+ Add New Task"}></Heading>

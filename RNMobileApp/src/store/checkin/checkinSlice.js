@@ -46,3 +46,7 @@ const checkinSlice = createSlice({
 export const { addAllCheckins, upsertCheckinLocal, deleteCheckin } =
   checkinSlice.actions;
 export default checkinSlice.reducer;
+
+export const checkinSelectors = checkins.getSelectors(
+  (state) => state.checkinSlice
+);

@@ -130,6 +130,7 @@
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				DC04783195C41884E8F30A88 /* Pods */,
 				F329AAD126FBC2B200CE59A2 /* Testing-Bridging-Header.h */,
+				E7D46B2F14254DE6A974974E /* Resources */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -154,6 +155,14 @@
 				8631B5D91F88AE8C7A74E785 /* Pods-Testing-TestingTests.release.xcconfig */,
 			);
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		E7D46B2F14254DE6A974974E /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Resources;
+			path = "";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

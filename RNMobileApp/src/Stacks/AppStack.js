@@ -9,6 +9,7 @@ import auth from "@react-native-firebase/auth";
 import { fetchandTrackToDoItems } from "../store/todo/todoListener";
 import { useDispatch } from "react-redux";
 import { fetchandTrackCheckinItems } from "../store/checkin/checkinListener";
+import ModalStack from "./ModalStack";
 
 const Stack = createNativeStackNavigator();
 
@@ -56,6 +57,11 @@ export default function AppStack() {
             component={LoginScreen}
           />
         )}
+                <Stack.Screen
+          name="Modal"
+          component={ModalStack}
+          options={{ headerShown: false }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
