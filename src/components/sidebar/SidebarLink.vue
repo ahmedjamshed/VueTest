@@ -12,29 +12,33 @@ export default {
     const isActive = computed(() => route.path === props.to)
     const isLogout = computed(() => props.to === "/login")
     const logout = async () => {
-       try {
-         await signOut(getAuth())
-         // router.push("/login");
-       } catch(e){
-           alert('Logout Failed')
-       }
-     }
+      try {
+        await signOut(getAuth())
+        // router.push("/login");
+      } catch (e) {
+        alert('Logout Failed')
+      }
+    }
     return { isActive, isLogout, logout }
   }
 }
 </script>
 
 <template>
-  <router-link :to="to" class="link" @click="isLogout ? logout() :undefined" :class="{ active: isActive }">
+  <router-link
+    :to="to"
+    class="link"
+    @click="isLogout ? logout() :undefined"
+    :class="{ active: isActive }"
+  >
     <i class="icon" :class="icon"></i>
-     <span class="menuTextStyle">
-        <slot></slot>
-      </span>
+    <span class="menuTextStyle">
+      <slot></slot>
+    </span>
   </router-link>
 </template>
 
 <style scoped>
-
 .link {
   display: flex;
   align-items: center;
@@ -64,16 +68,15 @@ export default {
   margin-right: 10px;
 }
 .menuTextStyle {
-    display: inline;
+  display: inline;
 }
 
 @media only screen and (max-width: 768px) {
   .menuTextStyle {
-      display: none;
+    display: none;
   }
   .link {
-  padding: 0.8em 1em;
+    padding: 0.8em 1em;
+  }
 }
-}
-
 </style>

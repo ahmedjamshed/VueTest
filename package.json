@@ -4,18 +4,20 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build"
+    "build": "vue-cli-service build",
+    "postinstall": "if test \"$NODE_ENV\" = \"production\" ; then yarn build ; fi ",
+    "start": "NODE_ENV=development node server.js"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.15.4",
     "@popperjs/core": "^2.10.1",
     "core-js": "^3.6.5",
+    "cors": "^2.8.5",
     "firebase": "^9.0.2",
+    "firebase-admin": "^9.11.1",
     "v-calendar": "^3.0.0-alpha.5",
     "vue": "^3.0.0",
-    "vue-router": "^4.0.0-0",
-    "vuex": "^4.0.0-0",
-    "vuexfire": "^3.2.5"
+    "vue-router": "^4.0.0-0"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",
