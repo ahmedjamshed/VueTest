@@ -3,15 +3,15 @@ import { watch } from "@vue/runtime-core"
 
 export default {
     props: ["item"],
-    setup(props) {
+    setup(props, { emit }) {
         const item = computed(() => ({
             name: props.item.email.split('@')[0],
             email: props.item.email
         }))
-        const goToUser = () => {
-
+        const deleteItem = () => {
+            emit('onDelete', props.item.uid)
         }
-        return { item, goToUser }
+        return { item, deleteItem }
     }
 }
 </script>
@@ -22,9 +22,10 @@ export default {
         <div class="itemDetail">
             <p class="heading">{{ item.name }}</p>
             <div class="emailContainer">
-                <p class="desc">{{ item.    email }}</p>
+                <p class="desc">{{ item.email }}</p>
             </div>
         </div>
+        <img class="checkImg" src="@/assets/delete.svg" @click="deleteItem(item)" />
     </div>
 </template>
 
@@ -38,10 +39,15 @@ export default {
     align-items: flex-start;
     user-select: none;
 }
+.checkImg {
+    height: 0.8em;
+    width: 0.8em;
+    padding: 7px 10px 0px 0px;
+}
+
 span {
-    height: 1.1em;
-    width: 1.1em;
-    margin: 7px 8px 0px 0px;
+    width: 1em;
+    margin: 0px 15px 15px 0px;
 }
 
 input {

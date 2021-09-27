@@ -13,6 +13,7 @@
     "@popperjs/core": "^2.10.1",
     "core-js": "^3.6.5",
     "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
     "firebase": "^9.0.2",
     "firebase-admin": "^9.11.1",
     "v-calendar": "^3.0.0-alpha.5",

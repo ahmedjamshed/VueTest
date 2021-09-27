@@ -6,7 +6,7 @@
                 <a class="heading">Users</a>
                 <ul class="listHolder">
                     <li v-for="user in users" :key="user.id">
-                        <UserItem :item="{ ...user }"></UserItem>
+                        <UserItem :item="{ ...user }" @onDelete="deleteUser"></UserItem>
                     </li>
                 </ul>
             </div>
@@ -58,18 +58,38 @@ export default {
         }
         onMounted(getUsers)
         const addUser = async (user) => {
-            const idToken = await getAuth().currentUser.getIdToken();
-            console.log(user)
-            const userRes = await fetch("http://localhost/api", {
-                method: 'POST', headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                    authorization: idToken
-                }, body: JSON.stringify(user)
-            }).then(response => response.json())
-            console.log(userRes)
+            try {
+                const idToken = await getAuth().currentUser.getIdToken();
+                const userRes = await fetch("http://localhost/api", {
+                    method: 'POST', headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        authorization: idToken
+                    }, body: JSON.stringify(user)
+                }).then(response => response.json())
+                users.value = [userRes, ...users.value]
+            } catch (e) {
+                console.log(e.message)
+            }
+
         }
-        return { modalHead, users, showModal, editItem, addUser, toggleVisibility }
+        const deleteUser = async (id) => {
+            try {
+                const idToken = await getAuth().currentUser.getIdToken();
+                users.value = users.value.filter((user) => user.uid !== id)
+                await fetch(`http://localhost/api/${id}`, {
+                    method: 'DELETE', headers: {
+                        authorization: idToken
+                    }
+                }).then(response => response.json())
+
+
+            } catch (e) {
+                console.log(e)
+            }
+
+        }
+        return { modalHead, users, showModal, editItem, addUser, deleteUser, toggleVisibility }
     }
 };
 </script>
@@ -104,7 +124,7 @@ export default {
     overflow: hidden;
 }
 .halfContainer {
-    height: 47%;
+    height: 95%;
     flex-direction: column;
     align-items: stretch;
     padding: 15px 0px;
