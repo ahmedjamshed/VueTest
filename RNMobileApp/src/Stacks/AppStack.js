@@ -31,7 +31,7 @@ export default function AppStack() {
     return () => {
       subscriber();
       todoListener?.();
-      checkinListener?.()
+      checkinListener?.();
     };
   }, []);
 
@@ -57,7 +57,7 @@ export default function AppStack() {
             component={LoginScreen}
           />
         )}
-                <Stack.Screen
+        <Stack.Screen
           name="Modal"
           component={ModalStack}
           options={{ headerShown: false }}

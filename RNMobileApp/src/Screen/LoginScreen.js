@@ -7,6 +7,7 @@ import {
 } from "react-native";
 import { StyleSheet, TextInput, View, Keyboard } from "react-native";
 import FirebaseUtils from "../Utils/FirebaseUtils";
+import { WP } from "../Utils/utils";
 
 export default function LoginScreen() {
   const [email, setEmail] = useState("");
@@ -35,11 +36,12 @@ export default function LoginScreen() {
       alert("Fill The Fields");
     }
   };
+  const [secure, setSecure] = React.useState(true);
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.Container}>
         {create ? (
-          <Text style={styles.mainheading}>Sign Up</Text>
+          <Text style={styles.mainheading}>Register</Text>
         ) : (
           <Text style={styles.mainheading}>Log In</Text>
         )}
@@ -49,35 +51,64 @@ export default function LoginScreen() {
           style={styles.InputText}
           value={email}
         />
-        <TextInput
-          placeholder="Password"
-          onChangeText={setPassword}
-          style={styles.InputText}
-          value={password}
-          secureTextEntry={true}
-        />
+        <View style={styles.InputText2}>
+          <TextInput
+            placeholder="Password"
+            onChangeText={setPassword}
+            value={password}
+            secureTextEntry={secure}
+            style={{ width: "80%" }}
+          />
+          {secure ? (
+            <>
+              <TouchableOpacity onPress={() => setSecure(false)}>
+                <Text style={styles.ShowText}>Show</Text>
+              </TouchableOpacity>
+            </>
+          ) : (
+            <>
+              <TouchableOpacity onPress={() => setSecure(true)}>
+                <Text style={styles.ShowText}>Unshow</Text>
+              </TouchableOpacity>
+            </>
+          )}
+        </View>
 
         {create ? (
           <>
             <TouchableOpacity style={styles.button} onPress={() => SignUp()}>
-              <Text style={styles.buttontext}>Sign Up</Text>
+              <Text style={styles.buttontext}>Register</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.QATextContainer}>
-              <Text style={styles.QAText} onPress={() => setCreate(false)}>
-                Already have an account?
-              </Text>
-            </TouchableOpacity>
+            <View
+              style={{
+                alignItems: "center",
+                width: "100%",
+              }}
+            >
+              <TouchableOpacity style={styles.QATextContainer}>
+                <Text style={styles.QAText} onPress={() => setCreate(false)}>
+                  Already have an account?
+                </Text>
+              </TouchableOpacity>
+            </View>
           </>
         ) : (
           <>
             <TouchableOpacity style={styles.button} onPress={() => SignIn()}>
               <Text style={styles.buttontext}>Log In</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.QATextContainer}>
-              <Text style={styles.QAText} onPress={() => setCreate(true)}>
-                {"Don't have an account?"}
-              </Text>
-            </TouchableOpacity>
+            <View
+              style={{
+                alignItems: "center",
+                width: "100%",
+              }}
+            >
+              <TouchableOpacity style={styles.QATextContainer}>
+                <Text style={styles.QAText} onPress={() => setCreate(true)}>
+                  {"Don't have an account?"}
+                </Text>
+              </TouchableOpacity>
+            </View>
           </>
         )}
       </View>
@@ -90,17 +121,36 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: Platform.OS === "ios" ? 30 : 20,
     backgroundColor: "#fff",
-    padding: 30,
+    padding: 40,
     justifyContent: "center",
   },
   InputText: {
-    backgroundColor: "#e2e2e2",
-    paddingHorizontal: Platform.OS === "ios" ? 13 : 10,
-    paddingVertical: Platform.OS === "ios" ? 18 : 15,
-    marginBottom: 10,
-    borderRadius: 10,
+    backgroundColor: "#F0F0F0",
+    paddingHorizontal: Platform.OS === "ios" ? 14 : 13,
+    paddingVertical: Platform.OS === "ios" ? 14 : 11,
+    marginBottom: 13,
+    borderRadius: 8,
     fontWeight: "600",
     fontSize: 16,
+    borderColor: "#E2E2E2",
+    borderWidth: 1.5,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  InputText2: {
+    backgroundColor: "#F0F0F0",
+    paddingHorizontal: Platform.OS === "ios" ? 14 : 13,
+    paddingVertical: Platform.OS === "ios" ? 14 : 0,
+    marginBottom: 13,
+    borderRadius: 8,
+    fontWeight: "600",
+    fontSize: 16,
+    borderColor: "#E2E2E2",
+    borderWidth: 1.5,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   text: {
     color: "#F05A22",
@@ -109,17 +159,17 @@ const styles = StyleSheet.create({
   },
   mainheading: {
     color: "black",
-    fontSize: 40,
-    fontWeight: "bold",
+    fontSize: WP(7),
+    fontWeight: "700",
     textAlign: "center",
-    marginBottom: 20,
+    marginBottom: 40,
   },
   button: {
     backgroundColor: "black",
     paddingHorizontal: Platform.OS === "ios" ? 13 : 10,
-    paddingVertical: Platform.OS === "ios" ? 15 : 13,
+    paddingVertical: Platform.OS === "ios" ? 12 : 11,
     marginBottom: 20,
-    borderRadius: 20,
+    borderRadius: 25,
     fontWeight: "600",
     fontSize: 16,
     alignItems: "center",
@@ -127,17 +177,22 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   buttontext: {
-    fontWeight: "600",
-    fontSize: 16,
+    fontWeight: "500",
+    fontSize: Platform.OS === "ios" ? 20 : 20,
     color: "#fff",
   },
   QATextContainer: {
     alignItems: "center",
+    borderColor: "black",
+    borderBottomWidth: Platform.OS === "ios" ? 1 : 2,
   },
   QAText: {
-    borderColor: "black",
-    borderBottomWidth: 1,
-    fontSize: Platform.OS === "ios" ? 16 : 16,
+    fontSize: Platform.OS === "ios" ? 15 : 16,
     fontWeight: "500",
+  },
+  ShowText: {
+    color: "black",
+    fontSize: WP(3.8),
+    fontWeight: Platform.OS === "ios" ? "400" : "500",
   },
 });

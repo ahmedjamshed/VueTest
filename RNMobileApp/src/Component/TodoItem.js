@@ -7,10 +7,13 @@ import IoniconsIcon from "react-native-vector-icons/Ionicons";
 import FontAwesomeIcon from "react-native-vector-icons/FontAwesome";
 import moment from "moment";
 import { WP } from "../Utils/utils";
+import { useDispatch } from "react-redux";
+import { upsertTodo } from "../store/todo/todoSlice";
 export const TodoItem = (props) => {
   const { id } = props;
   const task = useSelector((state) => todosSelectors.selectById(state, id));
   const Date = moment(task.date.toString()).format(" Do MMMM, h:mm");
+  const dispatch = useDispatch();
   return (
     <View style={styles.container}>
       <BouncyCheckbox
@@ -18,7 +21,7 @@ export const TodoItem = (props) => {
         fillColor="silver"
         isChecked={task.completed}
         onPress={(isChecked) => {
-          console.log(isChecked);
+          dispatch(upsertTodo({ id, completed: isChecked }));
         }}
       />
       <View style={{ flex: 1, marginTop: 23 }}>

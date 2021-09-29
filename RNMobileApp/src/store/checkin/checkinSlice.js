@@ -16,8 +16,8 @@ export const upsertcheckin = createAsyncThunk(
       if (!userId) return { status: 400, error: "No User" };
       if (isEmpty(item)) return { status: 400, error: "No Item" };
       const docRef = firestore().collection("checkins").doc(item.id);
-      console.log(docRef.id);
-      // docRef.set(item, { merge: true });
+      // console.log("id----", docRef);
+      docRef.set(item, { merge: true });
       return { status: 200 };
     } catch (e) {
       console.log(e.message);
