@@ -57,7 +57,7 @@ export default function LoginScreen() {
             onChangeText={setPassword}
             value={password}
             secureTextEntry={secure}
-            style={{ width: "80%" }}
+            style={{ width: "80%", color: "black" }}
           />
           {secure ? (
             <>
@@ -137,6 +137,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+    color: "black",
   },
   InputText2: {
     backgroundColor: "#F0F0F0",

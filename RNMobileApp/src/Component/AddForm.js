@@ -32,9 +32,8 @@ const AddForm = ({ navigation }) => {
   };
 
   const handleConfirm = (dates) => {
-    const time = moment(dates.toString()).format(" h:mm ");
-    const date = moment(dates.toString()).calendar();
-    setDate(date + "  " + time);
+    const date = moment(dates.toString()).toISOString();
+    setDate(date);
     hideDatePicker();
   };
   const addItem = useCallback((item) => {

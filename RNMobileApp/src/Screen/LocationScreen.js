@@ -7,42 +7,27 @@ import { checkinSelectors } from "../store/checkin/checkinSlice";
 import { Heading } from "../Component/Heading";
 import Geolocation from "@react-native-community/geolocation";
 import firebase from "@react-native-firebase/app";
-import firestore from "@react-native-firebase/firestore";
 import { upsertcheckin } from "../store/checkin/checkinSlice";
 import { useDispatch } from "react-redux";
 import auth from "@react-native-firebase/auth";
-import moment from "moment";
 import { TouchableOpacity } from "react-native";
 export default function LocationScreen() {
   const dispatch = useDispatch();
   const CheckInItem = useCallback((item) => {
     dispatch(upsertcheckin(item));
   }, []);
-  const [latitude, setLatitude] = useState();
-  const [longitude, setLongitude] = useState();
-  const [currentDate, setCurrentDate] = useState("");
-  const [geoPoints, setGeoPoitns] = useState("");
-  const [address, setAddress] = useState("");
-  const [currentDatas, setCurrentData] = useState([]);
+  const [currentData, setCurrentData] = useState({
+    displayName: "",
+    pinPoint: {
+      latitude: 0,
+      longitude: 0,
+    },
+  });
   const key = "pk.f3dfc2f41d80a467146ddf7a7e3ce040";
 
   useEffect(() => {
     Geolocation.getCurrentPosition(
       (info) => {
-        console.log("long-lat", info.coords.longitude, info.coords.latitude);
-        if (info.coords.longitude && info.coords.latitude) {
-          let lat = info.coords.latitude;
-          let long = info.coords.longitude;
-          setLatitude(lat);
-          setLongitude(long);
-        }
-
-        const geoPoint = new firebase.firestore.GeoPoint(
-          info.coords.latitude,
-          info.coords.longitude
-        );
-        setGeoPoitns(geoPoint);
-        createTimeStamp();
         fetchCity(info.coords.latitude, info.coords.longitude);
       },
       (error) => {
@@ -58,32 +43,32 @@ export default function LocationScreen() {
         `https://us1.locationiq.com/v1/reverse.php?key=${key}&lat=${latitude}&lon=${longitude}&format=json`
       );
       const data = await response.json();
-      let display = data.display_name;
-      setAddress(display);
-      console.log("display==>", display);
-      console.log("GeoPoint==>", geoPoints);
-
-      return data.display_name; //`${data.address.city ?? 'N/A' }, ${data.address.state ?? 'N/A'}, ${data.address.country ?? 'N/A'}`
+      setCurrentData({
+        displayName: data.display_name,
+        pinPoint: {
+          latitude,
+          longitude,
+        },
+      });
+      //`${data.address.city ?? 'N/A' }, ${data.address.state ?? 'N/A'}, ${data.address.country ?? 'N/A'}`
     } catch (e) {
+      console.log(e.meesage);
       return "Unknown";
     }
   };
 
   const AddCheckIn = () => {
-    if (address && geoPoints && currentDate) {
+    if (currentData) {
       CheckInItem({
-        displayName: address,
-        pinPoint: geoPoints,
-        timestamp: currentDate, // remove in case of edit
+        displayName: currentData.displayName,
+        pinPoint: new firebase.firestore.GeoPoint(
+          currentData.pinPoint.latitude,
+          currentData.pinPoint.longitude
+        ),
+        timestamp: new Date().toISOString(), // remove in case of edit
         user: auth().currentUser.uid, // remove in case of edit
       });
     }
-  };
-
-  const createTimeStamp = () => {
-    let time = moment();
-    setCurrentDate(time.toString());
-    console.log(time);
   };
 
   const locationItem = ({ item }) => {
@@ -105,9 +90,8 @@ export default function LocationScreen() {
         <View style={{ paddingTop: 0 }}>
           <Text style={styles.locationText}>{item.displayName}</Text>
           <Text style={styles.longlatText}>
-            {item.pinPoint._latitude.toFixed(2)} °N ,
-            {item.pinPoint._longitude.toFixed(2)}
-            °E
+            {item.pinPoint.latitude?.toFixed(2)} °N ,
+            {item.pinPoint.longitude?.toFixed(2)} °E
           </Text>
         </View>
       </View>
@@ -131,17 +115,10 @@ export default function LocationScreen() {
 
   const checkins = useSelector(checkinSelectors.selectAll);
 
-  currentData = [
-    {
-      displayName: address,
-      pinPoint: geoPoints,
-    },
-  ];
-
   const data = [
     {
       title: "Current Location",
-      data: address ? currentData : "",
+      data: [currentData],
     },
     {
       title: "Prevoius Locations",

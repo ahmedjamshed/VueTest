@@ -9,6 +9,7 @@ import moment from "moment";
 import { WP } from "../Utils/utils";
 import { useDispatch } from "react-redux";
 import { upsertTodo } from "../store/todo/todoSlice";
+import { deleteTodo } from "../store/todo/todoSlice";
 export const TodoItem = (props) => {
   const { id } = props;
   const task = useSelector((state) => todosSelectors.selectById(state, id));
@@ -44,7 +45,11 @@ export const TodoItem = (props) => {
             <IoniconsIcon name="alarm-outline" size={WP(4.5)} color="black" />
             <Text style={styles.dateText}>{Date}</Text>
           </View>
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              dispatch(deleteTodo(task.id));
+            }}
+          >
             <FontAwesomeIcon name="trash-o" size={WP(6)} color="black" />
           </TouchableOpacity>
         </View>
